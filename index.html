@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>yirtinci</title>
+    <meta
+      name="description"
+      content="A one-person studio building small, precise apps that model something real. Currently: Zone, a sleep debt and energy forecaster."
+    />
+    <meta name="theme-color" content="#080b18" />
+    <link rel="canonical" href="https://yirtinci.com/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="yirtinci" />
+    <meta
+      property="og:description"
+      content="Small, precise apps that model something real. Currently: Zone."
+    />
+    <meta property="og:url" content="https://yirtinci.com/" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/assets/zone-mark.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+
+    <style>
+      /* The studio page is deliberately quieter than the product page. It has
+         one job — say what this is and hand you to Zone — so it holds a single
+         slow-moving idea rather than competing for attention. */
+
+      .lead {
+        position: relative;
+        min-height: min(88svh, 820px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-block: var(--s-4xl);
+      }
+      .lead h1 {
+        max-width: 15ch;
+      }
+      .lead h1 em {
+        font-style: normal;
+        background: linear-gradient(100deg, var(--teal), var(--primary) 55%, var(--violet));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .lead .lede {
+        margin-top: var(--s-xl);
+      }
+
+      /* A slow field of the same curve mathematics, drifting behind the page.
+         It is the studio's one ornament and it is the product's own subject. */
+      .field {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+        pointer-events: none;
+        mask-image: linear-gradient(180deg, transparent, #000 22%, #000 70%, transparent);
+        -webkit-mask-image: linear-gradient(180deg, transparent, #000 22%, #000 70%, transparent);
+      }
+      .field svg {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 165vw;
+        height: 105%;
+        transform: translate(-50%, -50%);
+      }
+      .field path {
+        fill: none;
+        stroke-width: 1.15;
+        opacity: 0.5;
+      }
+
+      /* --- work ------------------------------------------------------------ */
+
+      section {
+        padding-block: clamp(var(--s-4xl), 11vh, 130px);
+      }
+      .head {
+        margin-bottom: var(--s-2xl);
+      }
+      .head h2 {
+        margin-top: var(--s-md);
+      }
+
+      .work {
+        display: block;
+        text-decoration: none;
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+        padding: clamp(var(--s-xl), 4vw, var(--s-3xl));
+        background: linear-gradient(160deg, var(--surface), var(--bg-soft) 70%);
+        position: relative;
+        overflow: hidden;
+        transition: border-color 0.35s var(--ease), transform 0.35s var(--ease);
+      }
+      .work:hover,
+      .work:focus-visible {
+        border-color: color-mix(in srgb, var(--primary) 55%, transparent);
+        transform: translateY(-3px);
+      }
+      .work__grid {
+        display: grid;
+        gap: var(--s-2xl);
+        grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+        align-items: center;
+      }
+      @media (max-width: 780px) {
+        .work__grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .work__title {
+        display: flex;
+        align-items: center;
+        gap: var(--s-md);
+        margin-bottom: var(--s-lg);
+      }
+      .work__title h3 {
+        font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+        letter-spacing: -0.03em;
+      }
+      .work p {
+        color: var(--muted);
+        max-width: 46ch;
+      }
+      .work__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--s-sm);
+        margin-top: var(--s-lg);
+      }
+      .work__meta span {
+        font-size: 12px;
+        padding: 5px 11px;
+        border-radius: var(--r-pill);
+        border: 1px solid var(--line);
+        color: var(--faint);
+      }
+      .work__go {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: var(--s-xl);
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--violet);
+      }
+      .work__go svg {
+        transition: transform 0.3s var(--ease);
+      }
+      .work:hover .work__go svg,
+      .work:focus-visible .work__go svg {
+        transform: translateX(4px);
+      }
+      .work__art svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      /* --- principles ------------------------------------------------------ */
+
+      .principles {
+        display: grid;
+        gap: var(--s-xl) var(--s-2xl);
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+      .principle {
+        border-top: 1px solid var(--line);
+        padding-top: var(--s-lg);
+      }
+      .principle h3 {
+        font-size: 1.05rem;
+        margin-bottom: var(--s-sm);
+      }
+      .principle p {
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .contact {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--s-md);
+        margin-top: var(--s-xl);
+      }
+    </style>
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="nav" id="nav">
+      <div class="wrap nav__in">
+        <a class="brand" href="/">
+          <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+            <defs>
+              <linearGradient id="bm" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0" stop-color="#00A7AF" />
+                <stop offset="0.5" stop-color="#7C6BF5" />
+                <stop offset="1" stop-color="#987DE7" />
+              </linearGradient>
+            </defs>
+            <rect width="32" height="32" rx="9" fill="#141A33" />
+            <path d="M6 21.5C9 21.5 10.2 9 16 9c5.8 0 7 12.5 10 12.5" fill="none" stroke="url(#bm)" stroke-width="2.6" stroke-linecap="round" />
+          </svg>
+          <span>yirtinci</span>
+        </a>
+        <nav class="nav__links" aria-label="Sections">
+          <a href="#work">Work</a>
+          <a href="#how">Approach</a>
+          <a href="/zone/">Zone</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="lead">
+        <div class="field" aria-hidden="true" id="field"></div>
+        <div class="wrap">
+          <p class="eyebrow">Independent studio</p>
+          <h1 style="margin-top: var(--s-lg)">
+            Small apps that model <em>something real.</em>
+          </h1>
+          <p class="lede">
+            One person, no venture money, no growth team. Each thing here starts from a mechanism
+            that has actually been measured, and stops when it does that one job properly.
+          </p>
+        </div>
+      </section>
+
+      <section id="work">
+        <div class="wrap">
+          <div class="head reveal">
+            <p class="eyebrow">Work</p>
+            <h2>Currently shipping one thing.</h2>
+          </div>
+
+          <a class="work reveal" href="/zone/">
+            <div class="work__grid">
+              <div>
+                <div class="work__title">
+                  <svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="wm" x1="0" y1="1" x2="1" y2="0">
+                        <stop offset="0" stop-color="#00A7AF" />
+                        <stop offset="0.5" stop-color="#7C6BF5" />
+                        <stop offset="1" stop-color="#987DE7" />
+                      </linearGradient>
+                    </defs>
+                    <rect width="32" height="32" rx="9" fill="#141A33" />
+                    <path d="M6 21.5C9 21.5 10.2 9 16 9c5.8 0 7 12.5 10 12.5" fill="none" stroke="url(#wm)" stroke-width="2.6" stroke-linecap="round" />
+                  </svg>
+                  <h3>Zone</h3>
+                </div>
+                <p>
+                  A sleep debt and energy forecaster. It models the two systems that actually drive
+                  human alertness — the pressure building while you are awake and the body clock
+                  running underneath it — and turns them into a plan for your day. No wearable, no
+                  account, no server.
+                </p>
+                <div class="work__meta">
+                  <span>iOS &amp; Android</span>
+                  <span>8 languages</span>
+                  <span>On-device only</span>
+                </div>
+                <span class="work__go">
+                  Open Zone
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+              <div class="work__art" id="workArt" aria-hidden="true"></div>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <section id="how">
+        <div class="wrap">
+          <div class="head reveal">
+            <p class="eyebrow">Approach</p>
+            <h2>Three rules, applied without exception.</h2>
+          </div>
+          <div class="principles">
+            <div class="principle reveal">
+              <h3>Model, don't decorate</h3>
+              <p>
+                If a number appears on screen it was computed from something, and the something is
+                published work rather than a rule of thumb. A guess with a progress ring around it is
+                still a guess.
+              </p>
+            </div>
+            <div class="principle reveal" style="--d: 90ms">
+              <h3>Your data stays yours</h3>
+              <p>
+                No account, no server, no analytics or advertising SDK. Not a policy promise — there
+                is nowhere for it to go. Export it to a file whenever you like.
+              </p>
+            </div>
+            <div class="principle reveal" style="--d: 180ms">
+              <h3>Never hold the user hostage</h3>
+              <p>
+                Everything you record, and everything derived from it, stays free. A subscription
+                buys new capability, never access to your own history.
+              </p>
+            </div>
+          </div>
+
+          <div class="contact reveal" style="--d: 240ms">
+            <a class="btn btn--primary" href="/zone/">See Zone</a>
+            <a class="btn btn--quiet" href="mailto:hello@yirtinci.com">hello@yirtinci.com</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer__row">
+        <p>© <span id="year">2026</span> yirtinci</p>
+        <nav aria-label="Links" style="display: flex; gap: var(--s-xl); flex-wrap: wrap">
+          <a href="/zone/">Zone</a>
+          <a href="/zone/privacy.html">Privacy</a>
+          <a href="/zone/terms.html">Terms</a>
+          <a href="mailto:support@yirtinci.com">Support</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script type="module">
+      import { forecast, smoothPath } from '/assets/forecast.js';
+
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const NS = 'http://www.w3.org/2000/svg';
+      const el = (n, a = {}) => {
+        const e = document.createElementNS(NS, n);
+        for (const [k, v] of Object.entries(a)) e.setAttribute(k, v);
+        return e;
+      };
+      document.getElementById('year').textContent = String(new Date().getFullYear());
+
+      /* --- the drifting field ---------------------------------------------
+         Nine real forecasts, one per wake hour from 04:00 to 12:00. The field
+         is not an abstract pattern: it is what the studio's only product
+         computes, for nine different people. */
+      function field() {
+        const host = document.getElementById('field');
+        const W = 1400;
+        const H = 700;
+        const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, preserveAspectRatio: 'xMidYMid slice' });
+
+        for (let i = 0; i < 9; i++) {
+          const wake = 4 + i;
+          const { points } = forecast({ wakeHour: wake, sleepHours: 6.5 + (i % 4) * 0.5, step: 0.5 });
+          const yOff = 70 + i * 66;
+          const xy = points.map((p) => ({
+            x: (p.t / 24) * W,
+            y: yOff + (1 - p.v / 100) * 150,
+          }));
+          const path = el('path', {
+            d: smoothPath(xy),
+            stroke: i % 3 === 0 ? '#7C6BF5' : i % 3 === 1 ? '#00A7AF' : '#987DE7',
+            opacity: 0.34 - Math.abs(i - 4) * 0.03,
+          });
+          svg.appendChild(path);
+
+          if (!reduced) {
+            const len = path.getTotalLength();
+            path.style.strokeDasharray = `${len}`;
+            path.style.strokeDashoffset = `${len}`;
+            path.style.transition = `stroke-dashoffset 2.6s var(--ease) ${i * 110}ms`;
+            requestAnimationFrame(() => {
+              path.style.strokeDashoffset = '0';
+            });
+          }
+        }
+        host.appendChild(svg);
+      }
+
+      /* --- the card's artwork: one clean curve ----------------------------- */
+      function art() {
+        const host = document.getElementById('workArt');
+        const W = 420;
+        const H = 240;
+        const { points } = forecast({ wakeHour: 7, sleepHours: 7.5 });
+        const svg = el('svg', { viewBox: `0 0 ${W} ${H}` });
+        const defs = el('defs');
+        defs.innerHTML = `
+          <linearGradient id="al" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#00A7AF"/><stop offset="0.45" stop-color="#7C6BF5"/><stop offset="1" stop-color="#987DE7"/>
+          </linearGradient>
+          <linearGradient id="af" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#7C6BF5" stop-opacity="0.26"/><stop offset="1" stop-color="#7C6BF5" stop-opacity="0"/>
+          </linearGradient>`;
+        svg.appendChild(defs);
+
+        const xy = points.map((p) => ({ x: (p.t / 24) * W, y: 26 + (1 - p.v / 100) * (H - 70) }));
+        const d = smoothPath(xy);
+        svg.appendChild(el('path', { d: `${d} L ${W} ${H - 22} L 0 ${H - 22} Z`, fill: 'url(#af)' }));
+        svg.appendChild(el('path', { d, fill: 'none', stroke: 'url(#al)', 'stroke-width': 2.8, 'stroke-linecap': 'round' }));
+        svg.appendChild(el('line', { x1: 0, y1: H - 22, x2: W, y2: H - 22, stroke: 'rgba(255,255,255,0.08)' }));
+        host.appendChild(svg);
+      }
+
+      function reveals() {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries)
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io.unobserve(e.target);
+              }
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
+        );
+        document.querySelectorAll('.reveal').forEach((n) => io.observe(n));
+
+        const nav = document.getElementById('nav');
+        const onScroll = () => nav.setAttribute('data-scrolled', String(window.scrollY > 8));
+        onScroll();
+        addEventListener('scroll', onScroll, { passive: true });
+      }
+
+      field();
+      art();
+      reveals();
+    </script>
+  </body>
+</html>

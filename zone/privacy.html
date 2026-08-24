@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Privacy Policy — Zone</title>
+    <meta name="description" content="Zone stores everything on your device. No account, no server, no analytics. This page explains exactly what that means and the one exception." />
+    <meta name="theme-color" content="#080b18" />
+    <link rel="canonical" href="https://yirtinci.com/zone/privacy.html" />
+    <link rel="icon" href="/assets/zone-mark.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <style>
+      .doc { padding-block: var(--s-3xl) 0; }
+      .doc__head { border-bottom: 1px solid var(--line); padding-bottom: var(--s-xl); margin-bottom: var(--s-xl); }
+      .doc__head h1 { font-size: clamp(2rem, 5vw, 3.2rem); }
+      .doc__date { color: var(--faint); font-size: 14px; margin-top: var(--s-md); }
+      .callout {
+        border: 1px solid color-mix(in srgb, var(--teal) 40%, transparent);
+        background: color-mix(in srgb, var(--teal) 8%, var(--surface));
+        border-radius: var(--r-lg);
+        padding: var(--s-xl);
+        margin: var(--s-xl) 0 var(--s-2xl);
+      }
+      .callout p { color: var(--text); margin: 0; }
+      table { border-collapse: collapse; width: 100%; margin: var(--s-lg) 0 var(--s-xl); font-size: 15px; }
+      th, td { text-align: left; padding: var(--s-md); border-bottom: 1px solid var(--line); vertical-align: top; }
+      th { color: var(--text); font-weight: 600; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
+      td { color: var(--muted); }
+      .tw { overflow-x: auto; }
+    </style>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="nav" id="nav">
+      <div class="wrap nav__in">
+        <a class="brand" href="/">
+          <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+            <defs><linearGradient id="bm" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#00A7AF"/><stop offset="0.5" stop-color="#7C6BF5"/><stop offset="1" stop-color="#987DE7"/></linearGradient></defs>
+            <rect width="32" height="32" rx="9" fill="#141A33"/>
+            <path d="M6 21.5C9 21.5 10.2 9 16 9c5.8 0 7 12.5 10 12.5" fill="none" stroke="url(#bm)" stroke-width="2.6" stroke-linecap="round"/>
+          </svg>
+          <span>yirtinci</span>
+        </a>
+        <nav class="nav__links" aria-label="Sections">
+          <a href="/zone/">Zone</a>
+          <a href="/zone/terms.html">Terms</a>
+          <a href="mailto:support@yirtinci.com">Support</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="wrap doc">
+      <div class="doc__head">
+        <p class="eyebrow">Zone</p>
+        <h1 style="margin-top: var(--s-md)">Privacy Policy</h1>
+        <p class="doc__date">Last updated 25 August 2026 · Applies to the Zone mobile app on iOS and Android</p>
+      </div>
+
+      <div class="prose">
+        <div class="callout">
+          <p>
+            <strong>Zone has no backend.</strong> There is no account to create, no server to sync
+            to, and no analytics or advertising SDK in the app. Everything you log is written to
+            storage on your own phone and stays there. This is how the app is built, not a promise
+            about how we behave.
+          </p>
+        </div>
+
+        <h2>Who this is from</h2>
+        <p>
+          Zone is made by Barış Yırtıncı, trading as <strong>yirtinci</strong>, an independent
+          one-person developer. Questions about this policy, or about data held on your device, go
+          to <a href="mailto:support@yirtinci.com">support@yirtinci.com</a>.
+        </p>
+
+        <h2>What Zone stores, and where</h2>
+        <p>
+          Everything below lives in the app's own storage area on your device. It is removed when
+          you delete the app, and you can erase it from inside the app at any time.
+        </p>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr><th>What</th><th>Why it exists</th><th>Where it goes</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Sleep logs — bed and wake times, how long you took to fall asleep, time awake in the night, a quality rating, and any factors you tag</td>
+                <td>The model has nothing to forecast from without them</td>
+                <td>Your device only</td>
+              </tr>
+              <tr>
+                <td>Your profile — sleep need, habitual bed and wake times, chronotype answers, caffeine sensitivity</td>
+                <td>Sets the phase and shape of your curve</td>
+                <td>Your device only</td>
+              </tr>
+              <tr>
+                <td>Caffeine doses you log</td>
+                <td>Drives the decay curve and the cut-off time</td>
+                <td>Your device only</td>
+              </tr>
+              <tr>
+                <td>Preferences — language, clock format, theme, reminder settings</td>
+                <td>So the app behaves the way you set it</td>
+                <td>Your device only</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>What Zone does not do</h2>
+        <ul>
+          <li>No account, no sign-in, no email address collected.</li>
+          <li>No analytics, telemetry, crash reporting SDK, or attribution SDK.</li>
+          <li>No advertising, and no advertising identifier is read.</li>
+          <li>No tracking across apps or websites. The iOS privacy manifest declares
+            <code>NSPrivacyTracking: false</code> with no tracking domains.</li>
+          <li>No location, contacts, photos, microphone, or health-store access is requested.</li>
+          <li>Your sleep data is never sold, shared, or transmitted anywhere.</li>
+        </ul>
+
+        <h2>The one exception: subscriptions</h2>
+        <p>
+          If you buy Zone Pro, the purchase itself is handled by Apple or Google, not by us. We never
+          see your card details, and we do not receive your name or email address.
+        </p>
+        <p>
+          To know whether your subscription is currently active, the app uses
+          <strong>RevenueCat</strong>, a subscription-management service. When the app first runs the
+          purchase flow, RevenueCat generates an <strong>anonymous identifier</strong> for the
+          install — the app does not supply one, and does not attach any personal detail to it. What
+          RevenueCat receives is that anonymous identifier and the store receipt needed to verify
+          entitlement. <strong>No sleep data, log, profile field, or preference is ever sent to it.</strong>
+        </p>
+        <p>
+          If you never open the paywall, this exchange does not happen at all. RevenueCat's own
+          policy is at
+          <a href="https://www.revenuecat.com/privacy" rel="noopener noreferrer" target="_blank">revenuecat.com/privacy</a>.
+        </p>
+
+        <h2>Notifications</h2>
+        <p>
+          Reminders are scheduled <strong>locally on your device</strong> by the operating system.
+          Nothing is pushed from a server, because there is no server. If you decline the
+          notification permission the rest of the app works unchanged.
+        </p>
+
+        <h2>Backups you make yourself</h2>
+        <p>
+          The app can export your history to a JSON file. That file is produced by you, handed to
+          your own share sheet, and goes wherever you send it. Once it leaves the app it is outside
+          our control — if you place it in a cloud drive, that provider's terms apply to it. Zone
+          neither uploads it nor keeps a copy.
+        </p>
+
+        <h2>Children</h2>
+        <p>
+          Zone is not directed at children under 13, and because there is no account and no
+          collection of personal data, none is knowingly gathered from anyone.
+        </p>
+
+        <h2>Your rights</h2>
+        <p>
+          Rights such as access, correction, portability and erasure under the GDPR, the UK GDPR, the
+          CCPA and Turkey's KVKK all attach to data a company holds about you. <strong>We hold
+          none.</strong> In practice:
+        </p>
+        <ul>
+          <li><strong>Access and portability</strong> — Settings → Back up my data exports everything, in a readable JSON file.</li>
+          <li><strong>Erasure</strong> — Settings → Erase all data removes it, permanently, from the device. Deleting the app does the same.</li>
+          <li><strong>Correction</strong> — every logged night can be edited or deleted individually.</li>
+        </ul>
+        <p>
+          For the anonymous subscription identifier described above, write to
+          <a href="mailto:support@yirtinci.com">support@yirtinci.com</a> with your store receipt and
+          we will ask RevenueCat to delete the associated record.
+        </p>
+
+        <h2>Changes to this policy</h2>
+        <p>
+          If the app ever starts doing something this page does not describe, this page changes
+          first, and the date at the top changes with it. Material changes will also be surfaced in
+          the app.
+        </p>
+
+        <h2>Not medical advice</h2>
+        <p>
+          Zone is a wellness tool, not a medical device. It does not diagnose or treat any condition.
+          If you have persistent sleep problems — or suspect a sleep disorder such as apnoea or
+          insomnia — please talk to a doctor.
+        </p>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer__row">
+        <p>© <span id="year">2026</span> yirtinci</p>
+        <nav aria-label="Links" style="display: flex; gap: var(--s-xl); flex-wrap: wrap">
+          <a href="/zone/">Zone</a>
+          <a href="/zone/terms.html">Terms</a>
+          <a href="mailto:support@yirtinci.com">support@yirtinci.com</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById('year').textContent = String(new Date().getFullYear());
+      const nav = document.getElementById('nav');
+      const s = () => nav.setAttribute('data-scrolled', String(scrollY > 8));
+      s();
+      addEventListener('scroll', s, { passive: true });
+    </script>
+  </body>
+</html>

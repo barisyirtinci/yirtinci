@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Zone — Sleep Debt &amp; Energy</title>
+    <meta
+      name="description"
+      content="Zone forecasts your energy hour by hour from the two systems that actually drive it — sleep pressure and your body clock. No wearable. Nothing leaves your phone."
+    />
+    <meta name="theme-color" content="#080b18" />
+    <link rel="canonical" href="https://yirtinci.com/zone/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Zone — Sleep Debt &amp; Energy" />
+    <meta
+      property="og:description"
+      content="Your energy is not random. Zone models the sleep pressure and body clock behind it, then tells you when to focus, train, stop caffeine and go to bed."
+    />
+    <meta property="og:url" content="https://yirtinci.com/zone/" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/assets/zone-mark.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/base.css" />
+
+    <style>
+      /* --- hero ------------------------------------------------------------ */
+
+      .hero {
+        position: relative;
+        padding: clamp(var(--s-3xl), 9vh, 120px) 0 0;
+        min-height: min(94svh, 900px);
+        display: flex;
+        flex-direction: column;
+      }
+      .hero__copy {
+        position: relative;
+        z-index: 2;
+        max-width: 22ch;
+      }
+      .hero h1 .accent {
+        /* The gradient is the app's own primary sweep, so the first thing you
+           read is literally the colour of its main action. */
+        background: linear-gradient(105deg, var(--violet), var(--primary) 45%, var(--teal));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .hero__lede {
+        margin-top: var(--s-xl);
+        max-width: 46ch;
+      }
+      .hero__cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--s-md);
+        margin-top: var(--s-2xl);
+      }
+
+      /* the live reading */
+      .now {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: flex-end;
+        gap: var(--s-lg);
+        margin-top: var(--s-3xl);
+      }
+      .now__value {
+        font-family: 'Bricolage Grotesque', 'Instrument Sans', sans-serif;
+        font-size: clamp(3.4rem, 9vw, 6rem);
+        font-weight: 800;
+        line-height: 0.86;
+        letter-spacing: -0.045em;
+      }
+      .now__of {
+        font-size: 1.1rem;
+        color: var(--faint);
+        padding-bottom: 0.5em;
+      }
+      .now__meta {
+        padding-bottom: 0.45em;
+        border-left: 1px solid var(--line-strong);
+        padding-left: var(--s-lg);
+        margin-left: var(--s-sm);
+      }
+      .now__meta b {
+        display: block;
+        font-weight: 600;
+        font-size: 15px;
+      }
+      .now__meta span {
+        font-size: 13px;
+        color: var(--faint);
+      }
+
+      /* the curve fills the bottom of the first screen, edge to edge */
+      .hero__curve {
+        margin-top: auto;
+        margin-inline: calc(50% - 50vw);
+        width: 100vw;
+        position: relative;
+      }
+      .hero__curve svg {
+        display: block;
+        width: 100%;
+        height: clamp(200px, 30vh, 320px);
+      }
+
+      .draw {
+        stroke-dasharray: var(--len);
+        stroke-dashoffset: var(--len);
+        animation: draw 2.4s var(--ease) forwards;
+      }
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      .fade-in {
+        opacity: 0;
+        animation: fade 1.1s var(--ease) 1.5s forwards;
+      }
+      @keyframes fade {
+        to {
+          opacity: 1;
+        }
+      }
+      .pulse {
+        animation: pulse 2.6s ease-in-out 2.2s infinite;
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.28;
+          r: 7;
+        }
+        50% {
+          opacity: 0;
+          r: 17;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .draw {
+          stroke-dashoffset: 0;
+          animation: none;
+        }
+        .fade-in {
+          opacity: 1;
+          animation: none;
+        }
+        .pulse {
+          animation: none;
+          opacity: 0.25;
+        }
+      }
+
+      /* --- sections -------------------------------------------------------- */
+
+      section {
+        padding-block: clamp(var(--s-4xl), 12vh, 150px);
+      }
+      .section-head {
+        max-width: 60ch;
+        margin-bottom: var(--s-3xl);
+      }
+      .section-head h2 {
+        margin-top: var(--s-md);
+      }
+      .section-head p {
+        margin-top: var(--s-lg);
+      }
+
+      /* --- the mechanism --------------------------------------------------- */
+
+      .mech {
+        display: grid;
+        gap: var(--s-xl);
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+      .mech__item {
+        border-top: 1px solid var(--line);
+        padding-top: var(--s-lg);
+      }
+      .mech__item[data-op]::before {
+        content: attr(data-op);
+        display: block;
+        font-family: 'Bricolage Grotesque', 'Instrument Sans', sans-serif;
+        font-size: 26px;
+        line-height: 1;
+        color: var(--faint);
+        margin-bottom: var(--s-md);
+      }
+      .mech__item h3 {
+        margin-bottom: var(--s-sm);
+      }
+      .mech__item p {
+        color: var(--muted);
+        font-size: 15px;
+      }
+      .mech__chart {
+        margin-top: var(--s-lg);
+      }
+      .mech__chart svg {
+        display: block;
+        width: 100%;
+        height: 84px;
+        overflow: visible;
+      }
+
+      /* --- the day --------------------------------------------------------- */
+
+      .day {
+        display: grid;
+        gap: var(--s-2xl);
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+        align-items: start;
+      }
+      @media (max-width: 860px) {
+        .day {
+          grid-template-columns: 1fr;
+        }
+      }
+      .day__chart {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+        padding: var(--s-lg) var(--s-lg) var(--s-sm);
+        position: sticky;
+        top: 96px;
+      }
+      @media (max-width: 860px) {
+        .day__chart {
+          position: static;
+        }
+      }
+      .day__chart svg {
+        display: block;
+        width: 100%;
+        height: 230px;
+        overflow: visible;
+      }
+      .day__list {
+        display: flex;
+        flex-direction: column;
+      }
+      .win {
+        display: grid;
+        grid-template-columns: 3px 1fr auto;
+        gap: var(--s-lg);
+        padding: var(--s-lg) 0;
+        border-top: 1px solid var(--line);
+        align-items: baseline;
+        cursor: default;
+        transition: opacity 0.3s var(--ease);
+      }
+      .win:first-child {
+        border-top: 0;
+      }
+      .win__rail {
+        align-self: stretch;
+        border-radius: 2px;
+        background: var(--c);
+      }
+      .win__label {
+        font-weight: 600;
+        font-size: 16px;
+      }
+      .win__note {
+        display: block;
+        font-weight: 400;
+        font-size: 14px;
+        color: var(--faint);
+        margin-top: 2px;
+      }
+      .win__time {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .day__list[data-focus] .win:not(.is-focus) {
+        opacity: 0.42;
+      }
+
+      /* --- tiers ----------------------------------------------------------- */
+
+      .tiers {
+        display: grid;
+        gap: var(--s-lg);
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        align-items: start;
+      }
+      .tier {
+        display: flex;
+        flex-direction: column;
+        gap: var(--s-lg);
+        height: 100%;
+      }
+      .tier--pro {
+        border-color: color-mix(in srgb, var(--sun) 40%, transparent);
+        background: linear-gradient(
+          170deg,
+          color-mix(in srgb, var(--sun) 7%, var(--surface)),
+          var(--surface) 55%
+        );
+      }
+      .tier__head {
+        display: flex;
+        align-items: center;
+        gap: var(--s-md);
+      }
+      .badge {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: var(--r-pill);
+        border: 1px solid;
+      }
+      .badge--free {
+        color: var(--teal);
+        border-color: color-mix(in srgb, var(--teal) 45%, transparent);
+        background: color-mix(in srgb, var(--teal) 12%, transparent);
+      }
+      .badge--pro {
+        color: var(--sun);
+        border-color: color-mix(in srgb, var(--sun) 45%, transparent);
+        background: color-mix(in srgb, var(--sun) 12%, transparent);
+      }
+      .tier ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--s-md);
+      }
+      .tier li {
+        display: grid;
+        grid-template-columns: 18px 1fr;
+        gap: var(--s-md);
+        font-size: 15px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .tier li b {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .tick {
+        width: 18px;
+        height: 18px;
+        margin-top: 2px;
+        flex: none;
+      }
+
+      /* --- facts ----------------------------------------------------------- */
+
+      .facts {
+        display: grid;
+        gap: var(--s-lg);
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+      .fact__n {
+        font-family: 'Bricolage Grotesque', 'Instrument Sans', sans-serif;
+        font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        display: block;
+      }
+      .fact p {
+        color: var(--muted);
+        font-size: 15px;
+        margin-top: var(--s-sm);
+      }
+      .langs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--s-sm);
+        margin-top: var(--s-lg);
+      }
+      .langs span {
+        font-size: 13px;
+        padding: 6px 12px;
+        border: 1px solid var(--line);
+        border-radius: var(--r-pill);
+        color: var(--muted);
+      }
+
+      /* --- closing --------------------------------------------------------- */
+
+      .close {
+        text-align: center;
+        padding-block: clamp(90px, 14vh, 170px);
+      }
+      .close h2 {
+        max-width: 18ch;
+        margin-inline: auto;
+      }
+      .close p {
+        margin: var(--s-xl) auto 0;
+      }
+      .close .hero__cta {
+        justify-content: center;
+      }
+      .note {
+        font-size: 13px;
+        color: var(--faint);
+        margin-top: var(--s-lg);
+      }
+    </style>
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="nav" id="nav">
+      <div class="wrap nav__in">
+        <a class="brand" href="/">
+          <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+            <defs>
+              <linearGradient id="bm" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0" stop-color="#00A7AF" />
+                <stop offset="0.5" stop-color="#7C6BF5" />
+                <stop offset="1" stop-color="#987DE7" />
+              </linearGradient>
+            </defs>
+            <rect width="32" height="32" rx="9" fill="#141A33" />
+            <path
+              d="M6 21.5C9 21.5 10.2 9 16 9c5.8 0 7 12.5 10 12.5"
+              fill="none"
+              stroke="url(#bm)"
+              stroke-width="2.6"
+              stroke-linecap="round"
+            />
+          </svg>
+          <span>yirtinci</span>
+        </a>
+        <nav class="nav__links" aria-label="Sections">
+          <a href="#how">How it works</a>
+          <a href="#day">Your day</a>
+          <a href="#pricing">Pricing</a>
+          <a href="/">Studio</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ================= hero ================= -->
+      <section class="hero">
+        <div class="wrap">
+          <p class="eyebrow">Zone — sleep debt &amp; energy</p>
+          <h1 style="margin-top: var(--s-lg)">
+            Your energy is <span class="accent">not random.</span>
+          </h1>
+          <p class="lede hero__lede">
+            Most sleep apps show you what already happened. Zone forecasts what is coming — from the
+            sleep pressure building in your brain and the body clock running underneath it.
+          </p>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#pricing">See what it does</a>
+            <a class="btn btn--quiet" href="#how">How it works</a>
+          </div>
+
+          <div class="now" id="now" hidden>
+            <div>
+              <span class="now__value tabular" id="nowValue">—</span>
+            </div>
+            <span class="now__of">/100</span>
+            <div class="now__meta">
+              <b id="nowState">Reading your clock…</b>
+              <span id="nowNext"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__curve" id="heroCurve" aria-hidden="true"></div>
+      </section>
+
+      <!-- ================= mechanism ================= -->
+      <section id="how">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <p class="eyebrow">How it works</p>
+            <h2>Two systems, not a step count.</h2>
+            <p class="lede">
+              Human alertness is driven by two processes that have been measured for forty years.
+              Zone models both, then subtracts one from the other. That is the whole trick — and it
+              is why the forecast holds up without a wearable strapped to you.
+            </p>
+          </div>
+
+          <div class="mech">
+            <div class="mech__item reveal" style="--d: 0ms">
+              <h3>Sleep pressure</h3>
+              <p>
+                A chemical debt that builds from the moment you wake and only clears while you sleep.
+                Miss an hour and it carries into tomorrow.
+              </p>
+              <div class="mech__chart" data-mech="s"></div>
+            </div>
+            <div class="mech__item reveal" data-op="−" style="--d: 120ms">
+              <h3>Body clock</h3>
+              <p>
+                A 24-hour rhythm anchored to your temperature minimum. It does not care that you are
+                tired — it lifts you in the evening whether you wanted that or not.
+              </p>
+              <div class="mech__chart" data-mech="c"></div>
+            </div>
+            <div class="mech__item reveal" data-op="=" style="--d: 240ms">
+              <h3>What you actually feel</h3>
+              <p>
+                Morning peak, afternoon dip, second wind, and the drop that follows. Not a mood — an
+                arithmetic result.
+              </p>
+              <div class="mech__chart" data-mech="r"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= the day ================= -->
+      <section id="day">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <p class="eyebrow">Your day</p>
+            <h2>Named to the minute, not to the afternoon.</h2>
+            <p class="lede">
+              Zone reads the turning points out of your own curve. Not “most people dip after lunch”
+              — <em>your</em> dip, at the time it actually starts.
+            </p>
+          </div>
+
+          <div class="day">
+            <div class="day__chart reveal" id="dayChart"></div>
+            <div class="day__list reveal" id="dayList" style="--d: 120ms"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= pricing ================= -->
+      <section id="pricing">
+        <div class="wrap">
+          <div class="section-head reveal">
+            <p class="eyebrow">What you get</p>
+            <h2>Your own history is never behind the paywall.</h2>
+            <p class="lede">
+              The loudest complaint in this category is apps holding your data hostage. Everything
+              you log, and everything Zone works out from it, stays free. Pro buys the parts that
+              take real modelling.
+            </p>
+          </div>
+
+          <div class="tiers">
+            <div class="card tier reveal">
+              <div class="tier__head">
+                <h3>Zone</h3>
+                <span class="badge badge--free">Free</span>
+              </div>
+              <ul>
+                <li>
+                  <svg class="tick" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M4 10.5l4 4 8-9" fill="none" stroke="#3CAC56" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <span><b>Your energy curve</b> for the next 24 hours, hour by hour</span>
+                </li>
+                <li>
+                  <svg class="tick" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#3CAC56" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  <span><b>Sleep debt</b>, accumulated, decayed and paid down properly</span>
+                </li>
+                <li>
+                  <svg class="tick" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#3CAC56" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  <span><b>Tonight's sleep window</b>, worked backwards from when you must be up</span>
+                </li>
+                <li>
+                  <svg class="tick" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#3CAC56" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  <span><b>Your chronotype</b> and the phase markers that come with it</span>
+                </li>
+                <li>
+                  <svg class="tick" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#3CAC56" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  <span><b>A weekly report</b> that grades the week and names one thing to change</span>
+                </li>
+                <li>
+                  <svg class="tick" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#3CAC56" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  <span><b>Backup and restore</b> — a file you own, on a phone you choose</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="card tier tier--pro reveal" style="--d: 100ms">
+              <div class="tier__head">
+                <h3>Zone Pro</h3>
+                <span class="badge badge--pro">Subscription</span>
+              </div>
+              <ul>
+                <li>
+                  <svg class="tick" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#B09018" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  <span><b>Smart wake window</b> — an alarm time that lands between sleep cycles, worked out the night before so you can actually set it</span>
+                </li>
+                <li>
+                  <svg class="tick" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#B09018" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  <span><b>How your night was built</b> — deep, REM and light cycle by cycle, so you can see why eight hours still felt wrong</span>
+                </li>
+                <li>
+                  <svg class="tick" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#B09018" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  <span><b>Live caffeine tracking</b> — log what you drank, watch it decay, see how much is still circulating at lights-out</span>
+                </li>
+                <li>
+                  <svg class="tick" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#B09018" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  <span><b>Factor analysis</b> — which habits measurably cost you sleep, tested against your own nights</span>
+                </li>
+                <li>
+                  <svg class="tick" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10.5l4 4 8-9" fill="none" stroke="#B09018" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                  <span><b>Jet lag planner</b> — a shift schedule for the days before you fly</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= facts ================= -->
+      <section id="facts">
+        <div class="wrap">
+          <div class="facts">
+            <div class="fact reveal">
+              <span class="fact__n tabular">0</span>
+              <p>
+                Servers, accounts and analytics SDKs. Zone has no backend — nothing you log leaves
+                your phone unless you export it yourself. That is architecture, not a promise.
+              </p>
+            </div>
+            <div class="fact reveal" style="--d: 100ms">
+              <span class="fact__n tabular">8</span>
+              <p>
+                Languages, translated properly rather than machine-passed — English, Türkçe, Deutsch,
+                Français, Español, Português, 日本語, 한국어.
+              </p>
+              <div class="langs">
+                <span>English</span><span>Türkçe</span><span>Deutsch</span><span>Français</span>
+                <span>Español</span><span>Português</span><span>日本語</span><span>한국어</span>
+              </div>
+            </div>
+            <div class="fact reveal" style="--d: 200ms">
+              <span class="fact__n tabular">40</span>
+              <p>
+                Years of published chronobiology behind the model — Borbély's two processes and the
+                Åkerstedt/Folkard inertia term, not a wellness heuristic.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= close ================= -->
+      <section class="close">
+        <div class="wrap">
+          <h2 class="reveal">Stop guessing at your own energy.</h2>
+          <p class="lede reveal" style="--d: 90ms">
+            Log when you slept. Zone does the rest — and tells you what to do with every hour of what
+            is coming.
+          </p>
+          <div class="hero__cta reveal" style="--d: 180ms">
+            <a class="btn btn--primary" href="#" aria-disabled="true" id="storeCta">Coming to the App Store &amp; Google Play</a>
+          </div>
+          <p class="note reveal" style="--d: 240ms">
+            Zone is a wellness tool, not a medical device. If you have persistent sleep problems,
+            please talk to a doctor.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer__row">
+        <p>© <span id="year">2026</span> yirtinci</p>
+        <nav aria-label="Legal and support" style="display: flex; gap: var(--s-xl); flex-wrap: wrap">
+          <a href="/zone/privacy.html">Privacy</a>
+          <a href="/zone/terms.html">Terms</a>
+          <a href="mailto:support@yirtinci.com">support@yirtinci.com</a>
+          <a href="/">yirtinci.com</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script type="module">
+      import { forecast, windows, smoothPath, clock, energyColour } from '/assets/forecast.js';
+
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const NS = 'http://www.w3.org/2000/svg';
+      const el = (n, a = {}) => {
+        const e = document.createElementNS(NS, n);
+        for (const [k, v] of Object.entries(a)) e.setAttribute(k, v);
+        return e;
+      };
+
+      document.getElementById('year').textContent = String(new Date().getFullYear());
+
+      /* --- the visitor's own day ------------------------------------------ */
+
+      const WAKE = 7;
+      const now = new Date();
+      const nowHour = now.getHours() + now.getMinutes() / 60;
+      // Hours since this morning's wake — before 07:00 you are still on yesterday.
+      const hoursAwake = (nowHour - WAKE + 24) % 24;
+
+      const { points } = forecast({ wakeHour: WAKE, sleepHours: 7.5 });
+      const wins = windows(points);
+
+      const sample = (t) =>
+        points[Math.max(0, Math.min(points.length - 1, Math.round((t / 24) * (points.length - 1))))];
+      const nowPoint = sample(hoursAwake);
+
+      /* --- hero curve ------------------------------------------------------ */
+
+      function heroCurve() {
+        const host = document.getElementById('heroCurve');
+        const W = 1200;
+        const H = 300;
+        const pad = 26;
+
+        const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, preserveAspectRatio: 'none' });
+        const defs = el('defs');
+        defs.innerHTML = `
+          <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0"    stop-color="#00A7AF"/>
+            <stop offset="0.42" stop-color="#7C6BF5"/>
+            <stop offset="1"    stop-color="#987DE7"/>
+          </linearGradient>
+          <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0"   stop-color="#7C6BF5" stop-opacity="0.30"/>
+            <stop offset="1"   stop-color="#7C6BF5" stop-opacity="0"/>
+          </linearGradient>`;
+        svg.appendChild(defs);
+
+        const xy = points.map((p) => ({
+          x: (p.t / 24) * W,
+          y: pad + (1 - p.v / 100) * (H - pad * 2),
+        }));
+        const d = smoothPath(xy);
+
+        svg.appendChild(el('path', { d: `${d} L ${W} ${H} L 0 ${H} Z`, fill: 'url(#fill)', class: 'fade-in' }));
+
+        const line = el('path', {
+          d,
+          fill: 'none',
+          stroke: 'url(#line)',
+          'stroke-width': 3,
+          'stroke-linecap': 'round',
+          'stroke-linejoin': 'round',
+          class: 'draw',
+        });
+        svg.appendChild(line);
+
+        // the marker for right now
+        const nx = (hoursAwake / 24) * W;
+        const ny = pad + (1 - nowPoint.v / 100) * (H - pad * 2);
+        const g = el('g', { class: 'fade-in' });
+        g.appendChild(el('line', { x1: nx, y1: ny, x2: nx, y2: H, stroke: 'rgba(255,255,255,0.14)', 'stroke-width': 1 }));
+        g.appendChild(el('circle', { cx: nx, cy: ny, r: 7, fill: '#7C6BF5', class: 'pulse' }));
+        g.appendChild(el('circle', { cx: nx, cy: ny, r: 6, fill: '#080B18', stroke: '#F0F2FF', 'stroke-width': 3 }));
+        svg.appendChild(g);
+
+        host.appendChild(svg);
+
+        if (!reduced) {
+          const len = line.getTotalLength();
+          line.style.setProperty('--len', len);
+        }
+      }
+
+      /* --- the live reading ------------------------------------------------ */
+
+      function liveReading() {
+        const box = document.getElementById('now');
+        const value = document.getElementById('nowValue');
+        const state = document.getElementById('nowState');
+        const next = document.getElementById('nowNext');
+        box.hidden = false;
+
+        const v = Math.round(nowPoint.v);
+        value.style.color = energyColour(v);
+
+        // What is coming, from the curve rather than from the clock.
+        const upcoming = wins.find((w) => w.point.t > hoursAwake) ?? wins[0];
+        state.textContent =
+          v >= 75 ? 'Sharp right now' : v >= 55 ? 'Steady' : v >= 35 ? 'Flagging' : 'Running on empty';
+        next.textContent = `${upcoming.label} at ${clock(upcoming.point.h)}`;
+
+        // Write the real number first. requestAnimationFrame does not run in a
+        // background tab, so a page opened in one and read later would otherwise
+        // sit on a dash forever -- the count-up is a flourish, not the content.
+        value.textContent = String(v);
+        if (reduced || document.visibilityState !== 'visible') return;
+
+        const start = performance.now();
+        const dur = 1400;
+        const tick = (t) => {
+          const k = Math.min(1, (t - start) / dur);
+          const eased = 1 - Math.pow(1 - k, 3);
+          value.textContent = String(Math.round(eased * v));
+          if (k < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+
+      /* --- the three little charts ----------------------------------------- */
+
+      function mechCharts() {
+        const W = 300;
+        const H = 84;
+        const series = {
+          // pressure: the exponential build, drawn as it accrues
+          s: { colour: '#CF7210', f: (t) => 1 - Math.exp(-t / 18.2) },
+          // clock: the alerting signal on its own, independent of the day
+          c: { colour: '#00A7AF', f: (t) => 0.5 - 0.5 * Math.cos(((t + 4) / 24) * 2 * Math.PI) },
+          // result: the real forecast
+          r: { colour: '#7C6BF5', f: null },
+        };
+
+        for (const [key, cfg] of Object.entries(series)) {
+          const host = document.querySelector(`[data-mech="${key}"]`);
+          const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, preserveAspectRatio: 'none' });
+          const pts = [];
+          for (let i = 0; i <= 48; i++) {
+            const t = (i / 48) * 24;
+            const norm = cfg.f ? cfg.f(t) : sample(t).v / 100;
+            pts.push({ x: (t / 24) * W, y: 8 + (1 - norm) * (H - 16) });
+          }
+          svg.appendChild(el('line', { x1: 0, y1: H - 8, x2: W, y2: H - 8, stroke: 'rgba(255,255,255,0.08)', 'stroke-width': 1 }));
+          const p = el('path', {
+            d: smoothPath(pts),
+            fill: 'none',
+            stroke: cfg.colour,
+            'stroke-width': 2.4,
+            'stroke-linecap': 'round',
+          });
+          svg.appendChild(p);
+          host.appendChild(svg);
+
+          if (!reduced) {
+            const len = p.getTotalLength();
+            p.style.strokeDasharray = len;
+            p.style.strokeDashoffset = len;
+            p.style.transition = 'stroke-dashoffset 1.6s var(--ease)';
+            new IntersectionObserver(
+              (entries, obs) => {
+                for (const e of entries)
+                  if (e.isIntersecting) {
+                    p.style.strokeDashoffset = '0';
+                    obs.disconnect();
+                  }
+              },
+              { threshold: 0.4 },
+            ).observe(host);
+          }
+        }
+      }
+
+      /* --- the day, chart + list ------------------------------------------- */
+
+      function dayView() {
+        const host = document.getElementById('dayChart');
+        const list = document.getElementById('dayList');
+        const W = 620;
+        const H = 230;
+        const pad = 18;
+
+        const svg = el('svg', { viewBox: `0 0 ${W} ${H}` });
+        const x = (t) => (t / 24) * W;
+        const y = (v) => pad + (1 - v / 100) * (H - pad - 30);
+
+        // hour ticks every four hours
+        for (let t = 0; t <= 24; t += 4) {
+          const p = sample(t);
+          svg.appendChild(el('line', { x1: x(t), y1: pad - 6, x2: x(t), y2: H - 26, stroke: 'rgba(255,255,255,0.06)', 'stroke-width': 1 }));
+          const label = el('text', {
+            x: Math.min(Math.max(x(t), 18), W - 18),
+            y: H - 8,
+            fill: '#8A91B4',
+            'font-size': 11,
+            'text-anchor': 'middle',
+          });
+          label.textContent = clock(p.h);
+          svg.appendChild(label);
+        }
+
+        const xy = points.map((p) => ({ x: x(p.t), y: y(p.v) }));
+        svg.appendChild(
+          el('path', { d: smoothPath(xy), fill: 'none', stroke: '#7C6BF5', 'stroke-width': 2.6, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }),
+        );
+
+        // one marker per window, plus the row it belongs to
+        wins.forEach((w, i) => {
+          const cx = x(w.point.t);
+          const cy = y(w.point.v);
+          const g = el('g', { 'data-win': w.id });
+          g.appendChild(el('line', { x1: cx, y1: cy, x2: cx, y2: H - 26, stroke: w.colour, 'stroke-width': 1, 'stroke-dasharray': '3 4', opacity: 0.55 }));
+          g.appendChild(el('circle', { cx, cy, r: 5.5, fill: '#141A33', stroke: w.colour, 'stroke-width': 2.5 }));
+          svg.appendChild(g);
+
+          const row = document.createElement('div');
+          row.className = 'win';
+          row.style.setProperty('--c', w.colour);
+          row.dataset.win = w.id;
+          row.innerHTML = `
+            <span class="win__rail"></span>
+            <span class="win__label">${w.label}<span class="win__note">${w.note}</span></span>
+            <span class="win__time tabular">${clock(w.point.h)}</span>`;
+          list.appendChild(row);
+
+          const focus = (on) => {
+            list.toggleAttribute('data-focus', on);
+            row.classList.toggle('is-focus', on);
+            g.setAttribute('opacity', on || !list.hasAttribute('data-focus') ? '1' : '0.35');
+          };
+          row.addEventListener('pointerenter', () => focus(true));
+          row.addEventListener('pointerleave', () => focus(false));
+        });
+
+        host.appendChild(svg);
+      }
+
+      /* --- reveals and chrome ---------------------------------------------- */
+
+      function reveals() {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries)
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io.unobserve(e.target);
+              }
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
+        );
+        document.querySelectorAll('.reveal').forEach((n) => io.observe(n));
+
+        const nav = document.getElementById('nav');
+        const onScroll = () => nav.setAttribute('data-scrolled', String(window.scrollY > 8));
+        onScroll();
+        addEventListener('scroll', onScroll, { passive: true });
+      }
+
+      heroCurve();
+      liveReading();
+      mechCharts();
+      dayView();
+      reveals();
+    </script>
+  </body>
+</html>
