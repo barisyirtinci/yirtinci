@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Lantern Bay — a cozy tile-matching puzzle</title>
+    <meta
+      name="description"
+      content="Lantern Bay is a cozy tile-matching puzzle game. Match three, clear the board and rebuild a little seaside town with Miso the cat. Free on iOS and Android."
+    />
+    <meta name="theme-color" content="#7ec8e3" />
+    <link rel="canonical" href="https://yirtinci.com/lanternbay/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Lantern Bay" />
+    <meta property="og:description" content="A cozy tile-matching puzzle by the sea." />
+    <meta property="og:url" content="https://yirtinci.com/lanternbay/" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/lanternbay/art/icon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/assets/base.css" />
+    <link rel="stylesheet" href="/lanternbay/lb.css" />
+
+    <style>
+      /* --- hero -------------------------------------------------------------- */
+
+      .hero {
+        padding-block: clamp(var(--s-2xl), 7vh, var(--s-4xl)) var(--s-4xl);
+      }
+      .hero__grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        gap: var(--s-3xl);
+        align-items: center;
+      }
+      @media (max-width: 860px) {
+        .hero__grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .hero__icon {
+        width: 76px;
+        height: 76px;
+        border-radius: 20px;
+        box-shadow: 0 10px 24px -10px rgba(46, 58, 89, 0.5);
+        display: block;
+      }
+      .hero h1 {
+        margin-top: var(--s-lg);
+        font-size: clamp(2.8rem, 8vw, 5rem);
+        color: var(--text);
+      }
+      .hero h1 span {
+        display: block;
+        font-size: 0.42em;
+        font-weight: 800;
+        color: var(--primary-deep);
+        letter-spacing: 0;
+        margin-top: var(--s-sm);
+      }
+      .hero .lede {
+        margin-top: var(--s-xl);
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--s-sm);
+        margin-top: var(--s-xl);
+      }
+      .chips span {
+        font-size: 13px;
+        font-weight: 700;
+        padding: 6px 12px;
+        border-radius: var(--r-pill);
+        background: var(--surface);
+        border: 1px solid var(--line);
+        color: var(--muted);
+      }
+      .cta {
+        margin-top: var(--s-2xl);
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--s-md);
+      }
+
+      /* The phone: the real home screen art, with tiles floating off it. */
+      .stage {
+        position: relative;
+        justify-self: center;
+        width: min(330px, 78vw);
+        margin-inline: auto;
+      }
+      .phone {
+        position: relative;
+        aspect-ratio: 400 / 700;
+        border-radius: 44px;
+        border: 10px solid #2e3a59;
+        overflow: hidden;
+        background: #7ec8e3;
+        box-shadow: 0 40px 70px -30px rgba(46, 58, 89, 0.55);
+      }
+      .phone img {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .stage .miso {
+        position: absolute;
+        width: 44%;
+        left: -16%;
+        bottom: -5%;
+        filter: drop-shadow(0 10px 14px rgba(46, 58, 89, 0.3));
+      }
+      .float {
+        position: absolute;
+        animation: bob 5s ease-in-out infinite;
+      }
+      .float .tile {
+        transform: rotate(var(--r, 0deg));
+      }
+      .f1 { right: -9%; top: 9%; --r: 10deg; }
+      .f2 { left: -12%; top: 30%; --r: -12deg; animation-delay: -1.6s; }
+      .f3 { right: -12%; top: 52%; --r: -6deg; animation-delay: -3.1s; }
+      .f1 .tile, .f3 .tile { --size: 58px; }
+      .f2 .tile { --size: 52px; }
+      @keyframes bob {
+        50% { transform: translateY(-10px); }
+      }
+      @media (max-width: 420px) {
+        .f1 { right: -4%; }
+        .f2 { left: -6%; }
+        .f3 { right: -6%; }
+        .stage .miso { left: -8%; }
+      }
+
+      /* --- sections ---------------------------------------------------------- */
+
+      section {
+        padding-block: clamp(var(--s-3xl), 9vh, 110px);
+      }
+      .head {
+        margin-bottom: var(--s-2xl);
+        max-width: 720px;
+      }
+      .head h2 {
+        margin-top: var(--s-md);
+      }
+      .head p {
+        margin-top: var(--s-lg);
+        color: var(--muted);
+      }
+
+      /* how it plays */
+      .steps {
+        display: grid;
+        gap: var(--s-lg);
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      }
+      .step {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: var(--r-xl);
+        padding: var(--s-xl);
+      }
+      .step__art {
+        display: flex;
+        gap: 8px;
+        align-items: flex-end;
+        height: 84px;
+        margin-bottom: var(--s-lg);
+      }
+      .step__art .tile {
+        --size: 52px;
+      }
+      .step h3 {
+        margin-bottom: var(--s-sm);
+      }
+      .step p {
+        color: var(--muted);
+        font-size: 16px;
+      }
+      .step__art .tile.lift {
+        transform: translateY(-14px) rotate(-6deg);
+      }
+      .tray {
+        display: flex;
+        gap: 5px;
+        padding: 7px;
+        border-radius: 16px;
+        background: #e7d3b5;
+        box-shadow: inset 0 3px 0 rgba(46, 58, 89, 0.12);
+      }
+      .tray .tile {
+        --size: 40px;
+      }
+      .tray b {
+        width: 40px;
+        height: 43px;
+        border-radius: 9px;
+        background: rgba(46, 58, 89, 0.08);
+      }
+      .poof {
+        font-size: 30px;
+        font-weight: 900;
+        color: var(--coral);
+        line-height: 1;
+        align-self: center;
+      }
+
+      /* places */
+      .places {
+        display: grid;
+        gap: var(--s-md);
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+      @media (max-width: 860px) {
+        .places {
+          grid-template-columns: none;
+          grid-auto-flow: column;
+          grid-auto-columns: 46%;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          padding-bottom: var(--s-md);
+        }
+      }
+      .place {
+        scroll-snap-align: start;
+        margin: 0;
+      }
+      .place img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 400 / 700;
+        border-radius: var(--r-lg);
+        border: 4px solid #fff;
+        box-shadow: 0 16px 30px -18px rgba(46, 58, 89, 0.6);
+        background: #7ec8e3;
+      }
+      .place figcaption {
+        font-weight: 800;
+        margin-top: var(--s-sm);
+        text-align: center;
+        font-size: 15px;
+      }
+
+      /* every day */
+      .daily {
+        display: grid;
+        gap: var(--s-lg);
+        grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+      }
+      .feat {
+        border-radius: var(--r-xl);
+        padding: var(--s-xl);
+        background: var(--surface);
+        border: 1px solid var(--line);
+        position: relative;
+        overflow: hidden;
+      }
+      .feat::after {
+        content: '';
+        position: absolute;
+        right: -34px;
+        top: -34px;
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        background: var(--c, var(--sun));
+        opacity: 0.4;
+      }
+      .feat h3 {
+        margin-bottom: var(--s-sm);
+        position: relative;
+        padding-right: 40px;
+      }
+      .feat p {
+        color: var(--muted);
+        font-size: 16px;
+        position: relative;
+      }
+
+      /* fair play */
+      .fair {
+        background: #2e3a59;
+        color: #fff8ee;
+        border-radius: var(--r-xl);
+        padding: clamp(var(--s-xl), 5vw, var(--s-3xl));
+      }
+      .fair .eyebrow {
+        color: #ffd66b;
+      }
+      .fair h2 {
+        color: #fff;
+        margin-top: var(--s-md);
+      }
+      .fair__list {
+        display: grid;
+        gap: var(--s-xl) var(--s-2xl);
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        margin-top: var(--s-2xl);
+      }
+      .fair__list h3 {
+        color: #fff;
+        font-size: 1.1rem;
+        margin-bottom: var(--s-sm);
+      }
+      .fair__list p {
+        color: #d5dbee;
+        font-size: 16px;
+      }
+
+      .closing {
+        text-align: center;
+      }
+      .closing img {
+        width: 120px;
+        margin: 0 auto var(--s-lg);
+        display: block;
+      }
+      .closing .cta {
+        justify-content: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="nav" id="nav">
+      <div class="wrap nav__in">
+        <a class="brand" href="/">
+          <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+            <defs><linearGradient id="bm" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#00A7AF"/><stop offset="0.5" stop-color="#7C6BF5"/><stop offset="1" stop-color="#987DE7"/></linearGradient></defs>
+            <rect width="32" height="32" rx="9" fill="#141A33"/>
+            <path d="M6 21.5C9 21.5 10.2 9 16 9c5.8 0 7 12.5 10 12.5" fill="none" stroke="url(#bm)" stroke-width="2.6" stroke-linecap="round"/>
+          </svg>
+          <span>yirtinci</span>
+        </a>
+        <nav class="nav__links" aria-label="Sections">
+          <a href="#play">How it plays</a>
+          <a href="#fair">Fair play</a>
+          <a href="/">Studio</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="wrap hero__grid">
+          <div>
+            <img class="hero__icon" src="/lanternbay/art/icon.svg" alt="" width="76" height="76" />
+            <h1>Lantern Bay<span>A cozy tile-matching puzzle by the sea</span></h1>
+            <p class="lede">
+              Tap tiles, match three of a kind and clear the board. Every win brings a little seaside
+              town back to life — one cottage, pier and lighthouse at a time — with Miso the cat
+              cheering you on.
+            </p>
+            <div class="chips">
+              <span>iOS &amp; Android</span>
+              <span>Free to play</span>
+              <span>Plays offline</span>
+              <span>English &amp; Türkçe</span>
+            </div>
+            <div class="cta">
+              <a class="btn btn--primary" href="#" aria-disabled="true" id="storeCta">Coming soon to iOS &amp; Android</a>
+            </div>
+          </div>
+
+          <div class="stage" aria-hidden="true">
+            <div class="phone"><img src="/lanternbay/art/town-harbor.svg" alt="" /></div>
+            <div class="float f1"><div class="tile" style="--d1:#fff4d9;--d2:#ffe9b5"><i></i><img src="/lanternbay/art/tile-4.svg" alt="" /></div></div>
+            <div class="float f2"><div class="tile" style="--d1:#ffd1d9;--d2:#ffa6b6"><i></i><img src="/lanternbay/art/tile-16.svg" alt="" /></div></div>
+            <div class="float f3"><div class="tile" style="--d1:#d5f0f5;--d2:#afe2ec"><i></i><img src="/lanternbay/art/tile-13.svg" alt="" /></div></div>
+            <img class="miso" src="/lanternbay/art/miso.svg" alt="" />
+          </div>
+        </div>
+      </section>
+
+      <section id="play">
+        <div class="wrap">
+          <div class="head reveal">
+            <p class="eyebrow">How it plays</p>
+            <h2>Easy to learn, hard to put down.</h2>
+          </div>
+          <div class="steps">
+            <div class="step reveal">
+              <div class="step__art" aria-hidden="true">
+                <div class="tile" style="--d1:#d1e8ff;--d2:#a6d3ff"><i></i><img src="/lanternbay/art/tile-0.svg" alt="" /></div>
+                <div class="tile lift" style="--d1:#f9cccf;--d2:#f39ca3"><i></i><img src="/lanternbay/art/tile-6.svg" alt="" /></div>
+                <div class="tile" style="--d1:#ffe6ce;--d2:#ffcfa1"><i></i><img src="/lanternbay/art/tile-2.svg" alt="" /></div>
+              </div>
+              <h3>Tap a free tile</h3>
+              <p>Tiles are stacked in layers. Only the ones on top can move, so look before you tap.</p>
+            </div>
+            <div class="step reveal" style="--d: 90ms">
+              <div class="step__art" aria-hidden="true">
+                <div class="tray">
+                  <div class="tile" style="--d1:#f9cccf;--d2:#f39ca3"><i></i><img src="/lanternbay/art/tile-6.svg" alt="" /></div>
+                  <div class="tile" style="--d1:#f9cccf;--d2:#f39ca3"><i></i><img src="/lanternbay/art/tile-6.svg" alt="" /></div>
+                  <div class="tile" style="--d1:#f9cccf;--d2:#f39ca3"><i></i><img src="/lanternbay/art/tile-6.svg" alt="" /></div>
+                  <b></b>
+                </div>
+                <span class="poof">✦</span>
+              </div>
+              <h3>Match three</h3>
+              <p>Three of a kind in your tray vanish with a pop. Chain matches together for a combo.</p>
+            </div>
+            <div class="step reveal" style="--d: 180ms">
+              <div class="step__art" aria-hidden="true">
+                <div class="tray"><b></b><b></b><b></b><b></b></div>
+              </div>
+              <h3>Keep the tray clear</h3>
+              <p>The tray only holds a few tiles. Fill it up and the round is over — plan a move or two ahead.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="town">
+        <div class="wrap">
+          <div class="head reveal">
+            <p class="eyebrow">Your town</p>
+            <h2>Five places to bring back to life.</h2>
+            <p>Stars from every level rebuild cottages, piers and lighthouses. Finish a place and the next one opens up.</p>
+          </div>
+          <div class="places reveal">
+            <figure class="place"><img src="/lanternbay/art/town-harbor.svg" alt="Harbor Cove, a seaside village with a lighthouse" loading="lazy" /><figcaption>Harbor Cove</figcaption></figure>
+            <figure class="place"><img src="/lanternbay/art/town-hill.svg" alt="Market Hill, a hilltop with a windmill" loading="lazy" /><figcaption>Market Hill</figcaption></figure>
+            <figure class="place"><img src="/lanternbay/art/town-isle.svg" alt="Starfall Isle under a night sky" loading="lazy" /><figcaption>Starfall Isle</figcaption></figure>
+            <figure class="place"><img src="/lanternbay/art/town-frost.svg" alt="Frost Hollow, a snowy valley" loading="lazy" /><figcaption>Frost Hollow</figcaption></figure>
+            <figure class="place"><img src="/lanternbay/art/town-lagoon.svg" alt="Coral Lagoon at sunset" loading="lazy" /><figcaption>Coral Lagoon</figcaption></figure>
+          </div>
+        </div>
+      </section>
+
+      <section id="daily">
+        <div class="wrap">
+          <div class="head reveal">
+            <p class="eyebrow">Every day</p>
+            <h2>Always something to come back to.</h2>
+          </div>
+          <div class="daily">
+            <div class="feat reveal" style="--c: #ffd66b">
+              <h3>Daily Puzzle</h3>
+              <p>One new board a day, the same for everyone. Keep your streak going.</p>
+            </div>
+            <div class="feat reveal" style="--c: #7ec8e3; --d: 60ms">
+              <h3>Lantern Climb</h3>
+              <p>A weekly event: climb to the top of the lighthouse, stage by stage, for bigger rewards.</p>
+            </div>
+            <div class="feat reveal" style="--c: #ff8a65; --d: 120ms">
+              <h3>Weekly League</h3>
+              <p>See how your week compares with other players. Scores are checked, so the board stays fair.</p>
+            </div>
+            <div class="feat reveal" style="--c: #6cc28a">
+              <h3>Quests &amp; trophies</h3>
+              <p>Small daily goals, a trophy room to fill and a postcard album from every place you rebuild.</p>
+            </div>
+            <div class="feat reveal" style="--c: #f39ca3; --d: 60ms">
+              <h3>Miso’s wardrobe</h3>
+              <p>Dress your cat companion up, and give your tiles a new look to match your mood.</p>
+            </div>
+            <div class="feat reveal" style="--c: #a6d3ff; --d: 120ms">
+              <h3>Seasons</h3>
+              <p>The bay changes with the calendar, with seasonal tiles around the holidays.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="fair">
+        <div class="wrap">
+          <div class="fair reveal">
+            <p class="eyebrow">Fair play</p>
+            <h2>Free to play, without the tricks.</h2>
+            <div class="fair__list">
+              <div>
+                <h3>Every board can be cleared</h3>
+                <p>No level is built to be impossible. If you lose, a better plan wins next time.</p>
+              </div>
+              <div>
+                <h3>No ad after a loss</h3>
+                <p>Ads help keep the game free, but they never interrupt you right after you lose a round.</p>
+              </div>
+              <div>
+                <h3>One purchase removes forced ads</h3>
+                <p>Optional purchases are coins and extras. A single No Ads purchase turns off the ads that play between levels.</p>
+              </div>
+              <div>
+                <h3>Your progress is safe</h3>
+                <p>Progress is saved on your phone as you play and survives updates. Nothing you earned is ever taken back.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="closing">
+        <div class="wrap reveal">
+          <img src="/lanternbay/art/miso.svg" alt="" />
+          <h2>The lanterns are waiting.</h2>
+          <div class="cta">
+            <a class="btn btn--primary" href="#" aria-disabled="true">Coming soon</a>
+            <a class="btn btn--quiet" href="mailto:support@yirtinci.com">support@yirtinci.com</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap footer__row">
+        <p>© <span id="year">2026</span> yirtinci</p>
+        <nav aria-label="Links" style="display: flex; gap: var(--s-xl); flex-wrap: wrap">
+          <a href="/lanternbay/privacy.html">Privacy</a>
+          <a href="/lanternbay/terms.html">Terms</a>
+          <a href="mailto:support@yirtinci.com">Support</a>
+          <a href="/">Studio</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById('year').textContent = String(new Date().getFullYear());
+      for (const a of document.querySelectorAll('[aria-disabled="true"]')) a.addEventListener('click', (e) => e.preventDefault());
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries)
+            if (e.isIntersecting) {
+              e.target.classList.add('is-in');
+              io.unobserve(e.target);
+            }
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -6% 0px' },
+      );
+      document.querySelectorAll('.reveal').forEach((n) => io.observe(n));
+      const nav = document.getElementById('nav');
+      const s = () => nav.setAttribute('data-scrolled', String(scrollY > 8));
+      s();
+      addEventListener('scroll', s, { passive: true });
+    </script>
+  </body>
+</html>

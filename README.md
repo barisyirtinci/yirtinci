@@ -1,19 +1,43 @@
 # yirtinci.com
 
-The studio site and Zone's product page. Static HTML, no build step, no dependencies —
+The studio site and its product pages. Static HTML, no build step, no dependencies —
 GitHub Pages serves this folder exactly as it stands.
 
+Each product is its own world: its own folder, its own colours, its own privacy policy and
+terms. The studio homepage only introduces them and says nothing product-specific about data.
+
 ```
-/                     studio homepage
-/zone/                Zone product page  ← also Apple's required Support URL
-/zone/privacy.html    privacy policy     ← linked from inside the app
-/zone/terms.html      terms of use       ← linked from inside the app
-/assets/base.css      shared foundation, palette lifted from the app
-/assets/forecast.js   the two-process model, running client-side
-/assets/zone-mark.svg the mark
-CNAME                 yirtinci.com
-.nojekyll             serve the files as-is, no Jekyll processing
+/                          studio homepage (both products)
+/zone/                     Zone product page  ← also Apple's required Support URL
+/zone/privacy.html         privacy policy     ← linked from inside the app
+/zone/terms.html           terms of use       ← linked from inside the app
+/lanternbay/               Lantern Bay product page  ← Support URL for the game
+/lanternbay/privacy.html   the game's privacy policy (ads, purchases, league)
+/lanternbay/terms.html     the game's terms (in-game items, purchases, fair play)
+/lanternbay/lb.css         the game's palette, layered over base.css
+/lanternbay/art/           SVG art exported from the game's own drawing code
+/assets/base.css           shared foundation, palette lifted from Zone
+/assets/forecast.js        the two-process model, running client-side
+/assets/zone-mark.svg      the mark
+CNAME                      yirtinci.com
+.nojekyll                  serve the files as-is, no Jekyll processing
 ```
+
+## Lantern Bay
+
+- **The name is a working title.** If it changes, rename the `lanternbay/` folder and replace
+  "Lantern Bay" / `lanternbay` across `index.html` and `lanternbay/*` — nothing else refers to it.
+  The game's privacy and terms URLs must then be updated in the game too.
+- **Keep the public page at marketing level.** It describes what the game is like to play. How the
+  levels are generated and balanced, the economy numbers, ad pacing and anti-cheat internals stay
+  in the game's private repository.
+- **The privacy policy lists every outside service** the shipped game talks to (AdMob, RevenueCat,
+  Firebase). If a service is added or dropped, this page changes in the same release.
+- **`app-ads.txt`** must be added at the site root once the AdMob account exists. AdMob shows
+  the exact line (`google.com, pub-…, DIRECT, f08c47fec0942fa0`); the store listings must give
+  `https://yirtinci.com` as the developer website so AdMob can find it.
+- The art in `lanternbay/art/` is exported from the game repository, not drawn separately, so the
+  page and the game always look like the same object.
 
 ## The two URLs that are not negotiable
 
@@ -75,13 +99,15 @@ subjective-alertness curves for a 07:00 riser and sit within 1.6 points RMS of t
 5. **Wait for the certificate,** then tick **Enforce HTTPS** in Settings → Pages. Both stores
    require the policy URLs to be `https://`.
 
-6. **Check the three URLs** in a private window before submitting anything:
-   `/zone/`, `/zone/privacy.html`, `/zone/terms.html`.
+6. **Check the URLs** in a private window before submitting anything:
+   `/zone/`, `/zone/privacy.html`, `/zone/terms.html`, `/lanternbay/`,
+   `/lanternbay/privacy.html`, `/lanternbay/terms.html`.
 
 ## Editing
 
 Open the files. There is no toolchain. `npx serve .` if you want it on localhost.
 
-Colours, spacing and radii all come from `assets/base.css`, whose values are the app's own —
+Colours, spacing and radii all come from `assets/base.css`, whose values are Zone's own —
 changing one there changes it everywhere on the site, and keeping it in step with
 `zone/src/ui/theme.ts` is what makes the site and the product look like the same object.
+Lantern Bay's pages override those tokens in `lanternbay/lb.css` with the game's colours.
