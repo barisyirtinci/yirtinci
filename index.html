@@ -6,7 +6,7 @@
     <title>yirtinci</title>
     <meta
       name="description"
-      content="A one-person studio building small, precise apps that model something real. Currently: Zone, a sleep debt and energy forecaster."
+      content="A one-person studio making small, carefully finished apps and games. Zone, a sleep debt and energy forecaster, and Lantern Bay, a cozy tile-matching puzzle."
     />
     <meta name="theme-color" content="#080b18" />
     <link rel="canonical" href="https://yirtinci.com/" />
@@ -15,7 +15,7 @@
     <meta property="og:title" content="yirtinci" />
     <meta
       property="og:description"
-      content="Small, precise apps that model something real. Currently: Zone."
+      content="Small apps and games, finished properly. Zone and Lantern Bay."
     />
     <meta property="og:url" content="https://yirtinci.com/" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -30,9 +30,10 @@
     <link rel="stylesheet" href="/assets/base.css" />
 
     <style>
-      /* The studio page is deliberately quieter than the product page. It has
-         one job — say what this is and hand you to Zone — so it holds a single
-         slow-moving idea rather than competing for attention. */
+      /* The studio page is deliberately quieter than the product pages. It has
+         one job — say what this is and hand you to a product — so it holds a
+         single slow-moving idea rather than competing for attention. Each
+         product page then speaks in its own colours. */
 
       .lead {
         position: relative;
@@ -56,8 +57,8 @@
         margin-top: var(--s-xl);
       }
 
-      /* A slow field of the same curve mathematics, drifting behind the page.
-         It is the studio's one ornament and it is the product's own subject. */
+      /* A slow field of Zone's curve mathematics, drifting behind the page.
+         It is the studio's one ornament. */
       .field {
         position: absolute;
         inset: 0;
@@ -169,6 +170,67 @@
         height: auto;
       }
 
+      /* Two products plus two sections no longer fit a phone's nav row; the
+         product links stay, the in-page ones are a scroll away anyway. */
+      .nav__links a {
+        white-space: nowrap;
+      }
+      @media (max-width: 560px) {
+        .nav__links a[href^='#'] {
+          display: none;
+        }
+      }
+
+      .work + .work {
+        margin-top: var(--s-xl);
+      }
+      /* Lantern Bay's card borrows its sunset from the game, so the two
+         products read as different worlds from the same hand. */
+      .work--bay {
+        background: linear-gradient(160deg, #2b3566, #3a2f5c 55%, #5a3552);
+      }
+      .work--bay:hover,
+      .work--bay:focus-visible {
+        border-color: color-mix(in srgb, #ffb27a 60%, transparent);
+      }
+      .work--bay .work__go {
+        color: #ffc29a;
+      }
+      .work__art--bay {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        gap: var(--s-md);
+        padding-block: var(--s-sm) var(--s-lg);
+      }
+      .work__art--bay img {
+        width: 38%;
+        max-width: 150px;
+        aspect-ratio: 400 / 700;
+        border-radius: 16px;
+        border: 3px solid rgba(255, 255, 255, 0.85);
+        box-shadow: 0 18px 30px -16px rgba(0, 0, 0, 0.7);
+      }
+      .work__art--bay img:first-child {
+        transform: rotate(-5deg) translateY(8px);
+      }
+      .work__art--bay img:nth-child(2) {
+        transform: rotate(4deg);
+      }
+      .work__art--bay .bay-miso {
+        position: absolute;
+        width: 26%;
+        max-width: 100px;
+        aspect-ratio: 1;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        left: 50%;
+        bottom: -6px;
+        transform: translateX(-50%);
+        filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.45));
+      }
+
       /* --- principles ------------------------------------------------------ */
 
       .principles {
@@ -220,6 +282,7 @@
           <a href="#work">Work</a>
           <a href="#how">Approach</a>
           <a href="/zone/">Zone</a>
+          <a href="/lanternbay/">Lantern Bay</a>
         </nav>
       </div>
     </header>
@@ -230,11 +293,12 @@
         <div class="wrap">
           <p class="eyebrow">Independent studio</p>
           <h1 style="margin-top: var(--s-lg)">
-            Small apps that model <em>something real.</em>
+            Small apps and games, <em>finished properly.</em>
           </h1>
           <p class="lede">
-            One person, no venture money, no growth team. Each thing here starts from a mechanism
-            that has actually been measured, and stops when it does that one job properly.
+            One person, no venture money, no growth team. A sleep forecaster built on published
+            science, a cozy puzzle game drawn line by line — different things, made with the same care,
+            each stopping when it does its one job well.
           </p>
         </div>
       </section>
@@ -243,7 +307,7 @@
         <div class="wrap">
           <div class="head reveal">
             <p class="eyebrow">Work</p>
-            <h2>Currently shipping one thing.</h2>
+            <h2>Two things, each its own world.</h2>
           </div>
 
           <a class="work reveal" href="/zone/">
@@ -284,6 +348,38 @@
               <div class="work__art" id="workArt" aria-hidden="true"></div>
             </div>
           </a>
+
+          <a class="work work--bay reveal" href="/lanternbay/" style="--d: 90ms">
+            <div class="work__grid">
+              <div>
+                <div class="work__title">
+                  <img src="/lanternbay/art/icon.svg" alt="" width="34" height="34" style="border-radius: 9px" />
+                  <h3>Lantern Bay</h3>
+                </div>
+                <p>
+                  A cozy tile-matching puzzle by the sea. Match three, clear the board and use every
+                  win to bring a little seaside town back to life, with Miso the cat for company.
+                  Free to play, fair by design.
+                </p>
+                <div class="work__meta">
+                  <span>iOS &amp; Android</span>
+                  <span>Puzzle game</span>
+                  <span>Coming soon</span>
+                </div>
+                <span class="work__go">
+                  Open Lantern Bay
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+              <div class="work__art work__art--bay" aria-hidden="true">
+                <img src="/lanternbay/art/town-lagoon.svg" alt="" loading="lazy" />
+                <img src="/lanternbay/art/town-harbor.svg" alt="" loading="lazy" />
+                <img src="/lanternbay/art/miso.svg" alt="" loading="lazy" class="bay-miso" />
+              </div>
+            </div>
+          </a>
         </div>
       </section>
 
@@ -291,35 +387,37 @@
         <div class="wrap">
           <div class="head reveal">
             <p class="eyebrow">Approach</p>
-            <h2>Three rules, applied without exception.</h2>
+            <h2>Three rules, whatever the product.</h2>
           </div>
           <div class="principles">
             <div class="principle reveal">
-              <h3>Model, don't decorate</h3>
+              <h3>Make the real thing</h3>
               <p>
-                If a number appears on screen it was computed from something, and the something is
-                published work rather than a rule of thumb. A guess with a progress ring around it is
-                still a guess.
+                If Zone shows a number, it was computed from published science. If a tile in Lantern
+                Bay has a cat on it, someone drew that cat. No stock templates, no filler, nothing
+                that only looks finished.
               </p>
             </div>
             <div class="principle reveal" style="--d: 90ms">
-              <h3>Your data stays yours</h3>
+              <h3>Say exactly what happens to your data</h3>
               <p>
-                No account, no server, no analytics or advertising SDK. Not a policy promise — there
-                is nowhere for it to go. Export it to a file whenever you like.
+                Each product has its own privacy page listing everything it stores and every service
+                it talks to. Zone talks to none: no server, no ads, no analytics. Lantern Bay is a free
+                game with ads and an online league, and its page says precisely what that involves.
               </p>
             </div>
             <div class="principle reveal" style="--d: 180ms">
-              <h3>Never hold the user hostage</h3>
+              <h3>Never hold anyone hostage</h3>
               <p>
-                Everything you record, and everything derived from it, stays free. A subscription
-                buys new capability, never access to your own history.
+                What you record or earn stays yours. Paying buys something new or takes something away
+                — new features, no ads — never access to your own history or progress.
               </p>
             </div>
           </div>
 
           <div class="contact reveal" style="--d: 240ms">
             <a class="btn btn--primary" href="/zone/">See Zone</a>
+            <a class="btn btn--quiet" href="/lanternbay/">See Lantern Bay</a>
             <a class="btn btn--quiet" href="mailto:hello@yirtinci.com">hello@yirtinci.com</a>
           </div>
         </div>
@@ -331,8 +429,7 @@
         <p>© <span id="year">2026</span> yirtinci</p>
         <nav aria-label="Links" style="display: flex; gap: var(--s-xl); flex-wrap: wrap">
           <a href="/zone/">Zone</a>
-          <a href="/zone/privacy.html">Privacy</a>
-          <a href="/zone/terms.html">Terms</a>
+          <a href="/lanternbay/">Lantern Bay</a>
           <a href="mailto:support@yirtinci.com">Support</a>
         </nav>
       </div>
@@ -352,8 +449,8 @@
 
       /* --- the drifting field ---------------------------------------------
          Nine real forecasts, one per wake hour from 04:00 to 12:00. The field
-         is not an abstract pattern: it is what the studio's only product
-         computes, for nine different people. */
+         is not an abstract pattern: it is what Zone computes, for nine
+         different people. */
       function field() {
         const host = document.getElementById('field');
         const W = 1400;

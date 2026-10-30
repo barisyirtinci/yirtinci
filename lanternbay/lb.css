@@ -1,0 +1,103 @@
+/* -----------------------------------------------------------------------------
+   Lantern Bay — page theme
+
+   The studio foundation (/assets/base.css) carries Zone's dark palette. This
+   product is a sunny seaside game, so its pages override the same tokens with
+   the game's own colours: the sky, sand and outline ink used in the art.
+   Every text colour below clears 4.5:1 on the cream background.
+   -------------------------------------------------------------------------- */
+
+:root {
+  --bg: #fff8ee;
+  --bg-soft: #fff1dc;
+  --surface: #ffffff;
+  --surface-high: #fff4e4;
+  --ambient: #e6f5fb;
+
+  --text: #2e3a59;
+  --muted: #4f5a78;
+  --faint: #5e6886;
+
+  --primary: #1f7fa3;
+  --primary-deep: #17698a;
+  --primary-button: #1f7fa3;
+  --violet: #1f7fa3;
+  --teal: #2e98be;
+  --sun: #ffd66b;
+  --coral: #ff8a65;
+  --rose: #e2566b;
+  --mint: #6cc28a;
+
+  --line: rgba(46, 58, 89, 0.12);
+  --line-strong: rgba(46, 58, 89, 0.24);
+
+  --round: 'Nunito', ui-rounded, 'SF Pro Rounded', 'Instrument Sans', system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--round);
+}
+body::before {
+  background: linear-gradient(180deg, var(--ambient) 0%, var(--bg) 46%);
+}
+h1,
+h2,
+h3 {
+  font-family: var(--round);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.btn--primary {
+  background: linear-gradient(180deg, #2b93b9, var(--primary-deep));
+  box-shadow: 0 6px 0 #11526c, 0 14px 26px -12px rgba(23, 105, 138, 0.7);
+}
+.btn--primary:hover,
+.btn--primary:focus-visible {
+  box-shadow: 0 8px 0 #11526c, 0 18px 30px -12px rgba(23, 105, 138, 0.8);
+}
+.btn[aria-disabled='true'] {
+  cursor: default;
+}
+
+.prose a {
+  color: var(--primary-deep);
+}
+
+/* --- the game's tile, drawn the way the game draws it --------------------- */
+
+.tile {
+  --size: 64px;
+  position: relative;
+  width: var(--size);
+  height: calc(var(--size) * 1.08);
+  border-radius: calc(var(--size) * 0.2);
+  background: linear-gradient(180deg, #f4cfa6, #d89c6c);
+  box-shadow: 0 calc(var(--size) * 0.12) calc(var(--size) * 0.22) -6px rgba(46, 58, 89, 0.35);
+  border: calc(var(--size) * 0.045) solid #2e3a59;
+  flex: none;
+}
+.tile::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 calc(var(--size) * 0.1);
+  border-radius: calc(var(--size) * 0.16);
+  background: linear-gradient(160deg, #fffefa, #fff6e6 60%, #f6e5c8);
+  box-shadow: inset 0 -2px 0 rgba(46, 58, 89, 0.08);
+}
+.tile i {
+  position: absolute;
+  left: 14%;
+  top: 9%;
+  width: 72%;
+  height: 66%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, var(--d1, #fff4d9), var(--d2, #ffe9b5));
+}
+.tile img {
+  position: absolute;
+  left: 8%;
+  top: 2%;
+  width: 84%;
+  height: 80%;
+}
